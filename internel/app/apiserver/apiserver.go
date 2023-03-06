@@ -57,10 +57,15 @@ func (s *APIServer) configureRouter() {
 func (s *APIServer) configureStore() error {
 	st := store.New(s.config.Store)
 
-	if err := st.Open(); err != nil {
+	db, err := st.Open()
+	if err != nil {
 
 		return err
 	}
+
+	s.store.Close(db)
+
+	s.logger.Info("Bd ping succesfull")
 	s.store = st
 
 	return nil
