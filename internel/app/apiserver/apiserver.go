@@ -10,17 +10,18 @@ import (
 )
 
 type APIServer struct {
-	config *Config
-	logger *logrus.Logger
-	router *mux.Router
-	store  *store.Store
+	config       *Config
+	logger       *logrus.Logger
+	router       *mux.Router
+	storeFactori *store.StoreFactory
 }
 
 func New(c *Config) *APIServer {
 	return &APIServer{
-		config: c,
-		logger: logrus.New(),
-		router: mux.NewRouter(),
+		config:       c,
+		logger:       logrus.New(),
+		router:       mux.NewRouter(),
+		storeFactori: &store.StoreFactory{},
 	}
 }
 
@@ -31,7 +32,7 @@ func (s *APIServer) Start() error {
 
 	s.configureRouter()
 
-	if err := s.configureStore(); err != nil {
+	if err := s.configureStoreFactory(); err != nil {
 		return err
 	}
 
@@ -50,25 +51,14 @@ func (s *APIServer) configureLogger() error {
 	return nil
 }
 
-func (s *APIServer) configureRouter() {
-	s.router.HandleFunc("/hello", s.hendleHello())
+func (s *APIServer) configureStoreFactory() error {
+	sf := store.New(s.config.Store)
+	s.storeFactori = sf
+	return nil
 }
 
-func (s *APIServer) configureStore() error {
-	st := store.New(s.config.Store)
-
-	db, err := st.Open()
-	if err != nil {
-
-		return err
-	}
-
-	s.store.Close(db)
-
-	s.logger.Info("Bd ping succesfull")
-	s.store = st
-
-	return nil
+func (s *APIServer) configureRouter() {
+	s.router.HandleFunc("/hello", s.hendleHello())
 }
 
 func (s *APIServer) hendleHello() http.HandlerFunc {

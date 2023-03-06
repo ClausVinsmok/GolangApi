@@ -1,60 +1,29 @@
 package store
 
-import "golang-rest-api/internel/app/model"
+import (
+	"database/sql"
+	"golang-rest-api/internel/app/model"
+)
 
 type UserRepository struct {
-	store *Store
+	db *sql.DB
 }
 
-//func (r *UserRepository) Create(u *model.User) (*model.User, error) {
-//	if err := r.store.db.QueryRow(
-//		"INSERT INTO users (email,encrypted_password) VALUES($1,$2) RETURNING id",
-//		u.Email,
-//		u.EncryptedPassword,
-//	).Scan(&u.ID); err != nil {
-//		return nil, err
-//	}
-//	return u, nil
-//}
-
-//func (r *UserRepository) FindByEmail(email string) (*model.User, error) {
-//	u := &model.User{}
-//
-//	if err := r.store.db.QueryRow(
-//		"SELECT id, email, encrypted_password FROM users WHERE email = $1",
-//		email,
-//	).Scan(
-//		&u.ID,
-//		&u.Email,
-//		&u.EncryptedPassword,
-//	); err != nil {
-//		return nil, err
-//	}
-//
-//	return u, nil
-//}
-
 func (r *UserRepository) Create(u *model.User) (*model.User, error) {
-	db, _ := r.store.Open()
-
-	if err := db.QueryRow(
+	if err := r.db.QueryRow(
 		"INSERT INTO users (email,encrypted_password) VALUES($1,$2) RETURNING id",
 		u.Email,
 		u.EncryptedPassword,
 	).Scan(&u.ID); err != nil {
-		db.Close()
 		return nil, err
 	}
-
-	r.store.Close(db)
 	return u, nil
 }
 
 func (r *UserRepository) FindByEmail(email string) (*model.User, error) {
 	u := &model.User{}
-	db, _ := r.store.Open()
 
-	if err := db.QueryRow(
+	if err := r.db.QueryRow(
 		"SELECT id, email, encrypted_password FROM users WHERE email = $1",
 		email,
 	).Scan(
@@ -64,7 +33,5 @@ func (r *UserRepository) FindByEmail(email string) (*model.User, error) {
 	); err != nil {
 		return nil, err
 	}
-
-	r.store.Close(db)
 	return u, nil
 }

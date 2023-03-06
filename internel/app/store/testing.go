@@ -6,44 +6,22 @@ import (
 	"testing"
 )
 
-//func TestStore(t *testing.T, databaceURL string) (*Store, func(...string)) {
-//	t.Helper()
-//
-//	config := NewConfig()
-//	config.DatabaseURL = databaceURL
-//	s := New(config)
-//
-//	if err := s.Open(); err != nil {
-//		t.Fatal(err)
-//	}
-//
-//	return s, func(tables ...string) {
-//		if len(tables) > 0 {
-//			if _, err := s.db.Exec(fmt.Sprintf("TRUNCATE %s CASCADE", strings.Join(tables, ", "))); err != nil {
-//				t.Fatal(err)
-//			}
-//		}
-//
-//		s.Close()
-//	}
-//}
-
 func TestStore(t *testing.T, databaceURL string) (*Store, func(...string)) {
 	t.Helper()
 
 	config := NewConfig()
 	config.DatabaseURL = databaceURL
-	s := New(config)
+	sf := New(config)
 
-	db, _ := s.Open()
+	store, _ := sf.NewStore()
+	defer store.Close()
 
-	return s, func(tables ...string) {
+	return store, func(tables ...string) {
 		if len(tables) > 0 {
-			if _, err := db.Exec(fmt.Sprintf("TRUNCATE %s CASCADE", strings.Join(tables, ", "))); err != nil {
+			if _, err := store.db.Exec(fmt.Sprintf("TRUNCATE %s CASCADE", strings.Join(tables, ", "))); err != nil {
 
 				t.Fatal(err)
 			}
 		}
-		s.Close(db)
 	}
 }
