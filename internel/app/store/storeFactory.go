@@ -19,10 +19,7 @@ func (s *StoreFactory) NewStore() (*Store, error) {
 
 	return &Store{
 		db:             db,
+		testRepository: &TestRepository{db: db},
 		userRepository: &UserRepository{db: db},
 	}, nil
-}
-
-func (s *Store) Close() {
-	s.db.Close()
 }

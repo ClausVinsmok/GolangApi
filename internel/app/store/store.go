@@ -2,12 +2,11 @@ package store
 
 import (
 	"database/sql"
-
-	_ "github.com/lib/pq" //Anonimn import
 )
 
 type Store struct {
 	db             *sql.DB
+	testRepository *TestRepository
 	userRepository *UserRepository
 }
 
@@ -16,9 +15,19 @@ func (s *Store) User() *UserRepository {
 		return s.userRepository
 	}
 
-	s.userRepository = &UserRepository{
-		db: s.db,
+	s.userRepository = &UserRepository{db: s.db}
+	return s.userRepository
+}
+
+func (s *Store) Test() *TestRepository {
+	if s.testRepository != nil {
+		return s.testRepository
 	}
 
-	return s.userRepository
+	s.testRepository = &TestRepository{db: s.db}
+	return s.testRepository
+}
+
+func (s *Store) Close() {
+	s.db.Close()
 }
