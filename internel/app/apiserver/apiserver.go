@@ -52,8 +52,13 @@ func (s *APIServer) configureLogger() error {
 }
 
 func (s *APIServer) configureStoreFactory() error {
+	if s.storeFactori != nil {
+		return nil
+	}
+
 	sf := store.New(s.config.Store)
 	s.storeFactori = sf
+
 	return nil
 }
 
