@@ -1,6 +1,6 @@
 package apiserver
 
-import "golang-rest-api/internel/app/store"
+import "GolangApi/internel/app/store"
 
 type Config struct {
 	BindAddr string `toml:"bind_addr"`

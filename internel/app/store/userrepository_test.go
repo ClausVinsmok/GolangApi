@@ -1,8 +1,8 @@
 package store_test
 
 import (
-	"golang-rest-api/internel/app/model"
-	"golang-rest-api/internel/app/store"
+	"GolangApi/internel/app/model"
+	"GolangApi/internel/app/store"
 	"testing"
 
 	"github.com/stretchr/testify/assert"

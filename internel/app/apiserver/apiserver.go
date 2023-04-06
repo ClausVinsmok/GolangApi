@@ -1,7 +1,7 @@
 package apiserver
 
 import (
-	"golang-rest-api/internel/app/store"
+	"GolangApi/internel/app/store"
 	"io"
 	"net/http"
 

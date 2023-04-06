@@ -1,8 +1,8 @@
 package store
 
 import (
+	"GolangApi/internel/app/model"
 	"database/sql"
-	"golang-rest-api/internel/app/model"
 )
 
 type UserRepository struct {

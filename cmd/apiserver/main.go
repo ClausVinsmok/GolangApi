@@ -1,10 +1,9 @@
 package main
 
 import (
+	"GolangApi/internel/app/apiserver"
 	"flag"
 	"log"
-
-	"golang-rest-api/internel/app/apiserver"
 
 	"github.com/BurntSushi/toml"
 )
